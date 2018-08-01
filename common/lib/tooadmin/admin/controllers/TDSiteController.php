@@ -97,10 +97,6 @@ class TDSiteController extends TDController {
 	}
 
 	public function actionAdmin() {
-		//*/
-		//echo "pkid=".$model->getPrimaryKey()."<br/>";
-		//echo "pkid2=".$model->primaryKey."<br/>";exit;
-		//echo "getTableSchema()->primaryKey=".$model->getTableSchema()->primaryKey."<br/>";exit;
 		$user_id = TDSessionData::getUserId();
 		if (Yii::app()->user->isGuest || empty($user_id)) {
 			$this->redirect(TDPathUrl::createUrl('tDSite/logout'));
