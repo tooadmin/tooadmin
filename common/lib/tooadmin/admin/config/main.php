@@ -75,8 +75,8 @@ return array(
 	'is_auto_upgrade' => false, //是否启动自动更新升级
 	'reset_layout_millisecond' => 2000, //弹出框重画页面等待毫秒数
 	'admin_menu_name' => 'tooadmin', //菜单栏名称
-	'admin_head_title' => 'tooadmin数据管理平台', //后台title
-	'admin_login_title' => 'tooadmin数据管理平台', //后台 登录标题
+	'admin_head_title' => 'tooadmin数据管理', //后台title
+	'admin_login_title' => 'tooadmin数据管理', //后台 登录标题
 	'admin_meta_keywords' => '', //后台 meta_keywords
 	'admin_meta_description' => '', //后台 meta_description
 	'cus_table_prefix' => 'sp_',//db应用数据表前缀，注意不能使用too_作为表前缀
