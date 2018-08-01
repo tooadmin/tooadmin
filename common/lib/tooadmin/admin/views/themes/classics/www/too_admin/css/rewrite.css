@@ -1,0 +1,26 @@
+.modal_sun {
+	background-clip: padding-box;
+	background-color: #FFFFFF;
+	border: 1px solid rgba(0, 0, 0, 0.3);
+	border-radius: 6px 6px 6px 6px;
+	box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+	left: 50%;
+	overflow: auto;
+	position: fixed;
+	top: 50%;
+	z-index: 1050;
+}
+.modal-body_sun {
+	overflow-y: auto;
+	padding-top: 5px;	
+}
+.md_search_lable {
+	width: auto !important;	
+}
+.input_readio {
+	padding-top: 5px;
+}
+
+//.grid-view { overflow: auto; }
+
+.tab-content { overflow:visible;}
