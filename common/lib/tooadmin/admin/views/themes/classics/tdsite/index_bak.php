@@ -9,7 +9,7 @@
         </div>
         <div class="box-content">
            <div class="sortable row-fluid ui-sortable">
-		   <h1>tooadmin，数据管理平台</h1>
+		   <h1>数据管理平台</h1>
 
 <!--	
 <a href="javascript:void(0)" onclick="showMsgTip('click1',1)">click1</a> 

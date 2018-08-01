@@ -69,7 +69,7 @@ return array(
 	),
     ),
     'params' => array(
-	'sys_version' => '1.3.0', //系统当前版本编号
+	'sys_version' => '2.0', //系统当前版本编号
 	'date_language' => 'zh_cn', //使用语音
 	'is_use_key' => false, //是否使用加密锁
 	'is_auto_upgrade' => false, //是否启动自动更新升级
