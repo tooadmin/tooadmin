@@ -131,7 +131,7 @@ function quickReorderMenu(id,go_0_back_1) {
 		</ul>
         	<!-- <input class="search-query span2" placeholder="Search" style="margin-top:5px;" type="text"> -->
 		<?php 
-		if(TDSessionData::currentUserIsAdmin()) { 
+		if(false && TDSessionData::currentUserIsAdmin()) { 
 			$fileStr = TDSessionData::getCache("developerToolMenu");
 			if ($fileStr === false) {
 				$fileStr = '
@@ -140,9 +140,6 @@ function quickReorderMenu(id,go_0_back_1) {
 					<ul class="dropdown-menu">
 						<li><a href="'.TDPathUrl::createUrl('cmad_'.TDModule::getModuleIdByTableName(TDTable::$too_menu).'_2000').'">'.TDLanguage::$menu_menu_manage.'</a></li>
 						<li><a href="'.TDPathUrl::createUrl('cmad_'.TDModule::getModuleIdByTableName(TDTable::$too_table_collection).'_0').'">'.TDLanguage::$menu_table_and_module.'</a></li>
-						<li><a href="'.TDPathUrl::createUrl('cmad_'.TDModule::getModuleIdByTableName(TDTable::$too_table_column).'_0').'">'.TDLanguage::$mysql_table_columns.'</a></li>
-						<li><a href="'.TDPathUrl::createUrl('cmad_'.TDModule::getModuleIdByTableName(TDTable::$too_module).'_0').'">'.TDLanguage::$menu_module_manage.'</a></li>
-						<li><a href="'.TDPathUrl::createUrl('tDUnitAction/mysql').'">MySQL</a></li>
 					</ul>
 				</div>';
 				TDSessionData::setCache("developerToolMenu",$fileStr);
@@ -173,12 +170,15 @@ function quickReorderMenu(id,go_0_back_1) {
 				<?php if(TDSessionData::currentUserIsAdmin()) { ?>
 				<li><a href="javascript:refreshCash();void(0);"><span class="icon-repeat"></span><?php echo TDLanguage::$UnitActionController_RefreshCash ?></a></li>
 				<li><a href="javascript:refreshTableStruct();void(0);"><span class=" icon-refresh"></span><?php echo TDLanguage::$UnitActionController_RefreshTableStruct ?></a></li>
-				<li><a target="_blank" href="<?php echo TDPathUrl::createUrl("tDUnitAction/structMenu") ?>"><span class="icon-list"></span><?php echo TDLanguage::$UnitActionController_STRUCT_MENU; ?></a></li>
 				<?php if(TDSessionData::getCurIsDevModel()){ ?>
 				<li><a href="javascript:closeDevModel();void(0);"><span class="icon-stop"></span><?php echo TDLanguage::$UnitActionController_CloseDevModel ?></a></li>
 				<?php } else { ?>
 				<li><a href="javascript:openDevModel();void(0);"><span class="icon-play"></span><?php echo TDLanguage::$UnitActionController_OpenDevModel ?></a></li>
 				<?php } ?>
+				<li><a href="<?php echo TDPathUrl::createUrl('cmad_'.TDModule::getModuleIdByTableName(TDTable::$too_menu).'_2000'); ?>"><span class="icon-list"></span><?php 
+				echo TDLanguage::$menu_menu_manage; ?></a></li>
+				<li><a href="<?php echo TDPathUrl::createUrl('cmad_'.TDModule::getModuleIdByTableName(TDTable::$too_table_collection).'_0'); ?>"><span class="icon-list-alt"></span><?php 
+				echo TDLanguage::$menu_table_and_module; ?></a></li>
 				<li><a href="<?php echo TDPathUrl::createUrl('tDUnitAction/userManage'); ?>"><span class="icon-user"></span><?php echo TDLanguage::$menu_user_manage; ?></a></li>
 				<li><a href="<?php echo TDPathUrl::createUrl('tDUnitAction/mysql'); ?>"><span class="icon-th-large"></span>minMySQL</a></li>
 				<?php } ?>

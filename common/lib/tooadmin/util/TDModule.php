@@ -109,4 +109,15 @@ class TDModule {
 		 */
 	}
 
+	public static function createModuleByTableId($tableId) {
+		$tableName = TDTableColumn::getTableDBName($tableId);
+		$moduleModel = TDModelDAO::getModel(TDTable::$too_module);
+		$moduleModel->name = $tableName;
+		$moduleModel->table_collection_id = $tableId;
+		if($moduleModel->save()){
+			return $moduleModel->id;
+		}
+		return false;
+	}
+	
 }

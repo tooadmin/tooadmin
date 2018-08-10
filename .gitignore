@@ -1,2 +1,6 @@
+assets/
+common/uploadfiles/
+common/lib/tooadmin/admin/runtime/
 common/lib/tooadmin/admin/config/
 nbproject
+.gitignore

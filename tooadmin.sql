@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : localhost
 Source Server Version : 50617
 Source Host           : localhost:3306
-Source Database       : tooadmin_init
+Source Database       : tooadmin
 
 Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2018-08-01 11:12:05
+Date: 2018-08-11 06:07:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -26,7 +26,7 @@ CREATE TABLE `too_login_log` (
   `login_time` int(10) DEFAULT NULL COMMENT '登录时间',
   `login_area` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '登录地区',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of too_login_log
@@ -55,8 +55,9 @@ CREATE TABLE `too_menu` (
   `query_params` text COMMENT '查询表单参数',
   `is_show_code` text COMMENT '是否显示code',
   PRIMARY KEY (`id`),
-  KEY `module_id` (`module_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='菜单栏';
+  KEY `module_id` (`module_id`),
+  KEY `pid` (`pid`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='菜单栏';
 
 -- ----------------------------
 -- Records of too_menu
@@ -89,9 +90,8 @@ CREATE TABLE `too_menu_items` (
   `is_show_code` text COMMENT '是否显示code',
   PRIMARY KEY (`id`),
   KEY `module_id` (`module_id`),
-  KEY `menu_id` (`menu_id`),
-  CONSTRAINT `too_menu_items_ibfk_1` FOREIGN KEY (`menu_id`) REFERENCES `too_menu` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='菜单栏';
+  KEY `menu_id` (`menu_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='菜单栏';
 
 -- ----------------------------
 -- Records of too_menu_items
@@ -155,23 +155,23 @@ CREATE TABLE `too_module` (
   `default_expand_all_tree` tinyint(1) DEFAULT '0' COMMENT '默认全部展开树',
   PRIMARY KEY (`id`),
   KEY `table_collection_id` (`table_collection_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1096 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=1099 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of too_module
 -- ----------------------------
-INSERT INTO `too_module` VALUES ('10', '菜单栏管理', '9', '1', 'add,update,delete,view', null, '2180', '0', '0', '0', '0', '0', '', '', 'if(isset($_GET[\"qkm_pid\"])){\r\n$model->pid=intval($_GET[\"qkm_pid\"]);\r\n}', 'if(isset($_GET[\"qkm_pid\"])){\r\n$model->pid=intval($_GET[\"qkm_pid\"]);\r\n}', 'TDEvent_Menu::afterSave($model);', '1', '', '', '', '', '', '', '', 'TDEvent_Menu::afterDelete($model);', null, null, '', '', '', '', '0', '', '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', '', null, '1', '0');
+INSERT INTO `too_module` VALUES ('10', '菜单栏管理', '9', '1', 'add,update,delete,view', null, '2180', '0', '0', '0', '0', '0', '', '', 'if(isset($_GET[\"qkm_pid\"])){\r\n$model->pid=intval($_GET[\"qkm_pid\"]);\r\n}', 'if(isset($_GET[\"qkm_pid\"])){\r\n$model->pid=intval($_GET[\"qkm_pid\"]);\r\n}', 'TDEvent_Menu::afterSave($model);', '1', '', '', '', '', '', '', '', 'TDEvent_Menu::afterDelete($model);', null, 'echo \'<a class=\"btn btn-primary\" target=\"_blank\" href=\"\'.TDPathUrl::createUrl(\"tDUnitAction/structMenu\").\'\">\'.TDLanguage::$UnitActionController_STRUCT_MENU.\'</a>\';', '', '', '', '', '0', '', '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', '', null, '1', '0');
 INSERT INTO `too_module` VALUES ('11', '功能模块管理', '12', '1', 'add,update,delete', null, '2200', '1', '0', '0', '0', '0', '', '$VAL = \"\";\r\nif(!TDSessionData::currentUserIsTooAdmin()) {\r\n$VAL = \"`t`.`table_collection_id` not in(\".TDTable::$sys_table_ids.\")\";\r\n}', '', '', '', '1', '', '', '', '', '', '', 'TDEvent_Module::beforeDelete($model);', '', null, null, '', '', '', '', '0', '', '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', null, null, '1', '0');
 INSERT INTO `too_module` VALUES ('17', '系统-角色', '11', '1', 'add,update,delete,view', '角色管理', '2210', '1', '0', '0', '0', '0', '', '', '', '', '', '1', '', '', '', '', '', '', null, null, null, null, null, null, null, null, '0', null, '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', null, null, '1', '0');
 INSERT INTO `too_module` VALUES ('26', '数据表结构', '13', '1', 'add,update,delete,view', null, '2220', '1', '0', '0', '0', '0', '$VAL=\"`t`.`type` desc\";', '$VAL = \'\';\r\nif(!TDSessionData::currentUserIsTooAdmin()) {\r\n$VAL = \"`t`.`id` not in(\".TDTable::$sys_table_ids.\")\";\r\n}', '', '', '', '1', 'unset($_GET);unset($_POST);\r\nTDTable::synchronizeDBWithSys($model->id);', '', '', '', '', '', 'TDEvent_Table::beforeDelete($model->table);', '', null, null, '', '', '', '', '0', '', '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', '', null, '1', '0');
-INSERT INTO `too_module` VALUES ('31', '数据表字段', '20', '2', 'add,update,delete', null, '2230', '1', '50', '0', '0', '0', '', '', '', '', '', '1', '', '', '$VAL=$data->column_type==1;', '', '', '', 'TDEvent_Column::beforDeleveCusColumn($model->id);', '', null, null, '', '', '', '', '0', '', '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', '', null, '1', '0');
-INSERT INTO `too_module` VALUES ('36', '数据表字段选择', '20', '0', 'update', null, '2240', '1', '108', '1', '144', '0', '', '', '', '', '', '1', '', '', '', '', '', '', '', '', null, null, '', '', '', '', '0', '', '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', '', null, '1', '0');
+INSERT INTO `too_module` VALUES ('31', '数据表字段', '20', '2', 'add,update,delete', null, '2230', '1', '50', '0', '0', '0', '', '', 'if(!empty($model->map_table_collection_id) && empty($model->module_id)){\r\n	$tableModuleId = TDModule::createModuleByTableId($model->map_table_collection_id);\r\n    $model->module_id = $tableModuleId;\r\n}', '', '', '1', '', '', '$VAL=$data->column_type==1;', '', '', '', 'TDEvent_Column::beforDeleveCusColumn($model->id);', '', null, null, '', '', '', '', '0', '', '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', '', null, '1', '0');
+INSERT INTO `too_module` VALUES ('36', '数据表字段选择', '20', '0', 'update', null, '2240', '1', '108', '1', '144', '0', '', '', 'if(!empty($model->map_table_collection_id) && empty($model->module_id)){\r\n	$tableModuleId = TDModule::createModuleByTableId($model->map_table_collection_id);\r\n    $model->module_id = $tableModuleId;\r\n}', '', '', '1', '', '', '', '', '', '', '', '', null, null, '', '', '', '', '0', '', '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', '', null, '1', '0');
 INSERT INTO `too_module` VALUES ('38', 'gridview字段', '26', '0', 'add,delete', null, '2250', '0', '0', '0', '0', '950', '', '', '', '', '', '1', '', '', '', '', '', '', '', '', 'if(isset($_GET[\"optype\"]) && $_GET[\"optype\"] == \"changeGridviewUseStatus\"){\r\n    $tomenuid = intval($_GET[\"tomenuid\"]);\r\n  	$csstatus = intval($_GET[\"csstatus\"]);\r\n  	if(empty($tomenuid)){\r\n  		echo \"tomenuid 为空,参数有误\";exit;\r\n    }\r\n	if(TDModelDAO::queryScalar(\"xg_wechat_pcgridview\",\"wechat_id=\".Xjkut::getCurwc().\" and gridview_id=\".$tomenuid,\"count(*)\") > 0) {\r\n		TDModelDAO::updateRowByCondition(\"xg_wechat_pcgridview\", \"wechat_id=\".Xjkut::getCurwc().\" and gridview_id=\".$tomenuid,array(\"is_use\"=>$csstatus));\r\n	} else {\r\n		$new = TDModelDAO::getModel(\"xg_wechat_pcgridview\");\r\n		$new->wechat_id =Xjkut::getCurwc();\r\n		$new->gridview_id = $tomenuid;\r\n		$new->is_use = $csstatus;\r\n      	$new->too_module_id = TDModelDAO::queryScalarByPk(\"too_module_gridview\",$tomenuid,\"module_id\");\r\n		$new->save();\r\n	}\r\n	echo \"success\";exit;\r\n}', 'echo \'\r\n<script>\r\nfunction changeGridviewUseStatus(id,csstatus){\r\n  var tip = csstatus == 1 ? \"激活该项\" : \"禁用该项\";\r\n  if(window.confirm(\"当前公众号是否确认\"+tip+\"？\")) {\r\n    	$.ajax({  \r\n			type:\"GET\",\r\n			dataType:\"text\",\r\n			url:\"\'.Yii::app()->request->url.\'?optype=changeGridviewUseStatus&tomenuid=\"+id+\"&csstatus=\"+csstatus,  \r\n			data:\"\",\r\n        	success:function(data){  \r\n              if(data==\"success\"){\r\n                  alert(\"操作成功\");\r\n                  to_gridview_refresh();\r\n              } else {\r\n                  alert(\"操作失败,\"+data);\r\n              }\r\n      		}  \r\n		});\r\n	}\r\n}\r\n</script>\r\n\';', '', '', '', '', '0', '', '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', '', null, '1', '0');
 INSERT INTO `too_module` VALUES ('40', 'formupdate字段', '28', '0', 'add,delete', '', '2260', '0', '0', '0', '0', '850', '', '', '', '', '', '1', '', '', '', '', '', '', null, null, null, null, null, null, null, null, '0', null, '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', null, null, '1', '0');
 INSERT INTO `too_module` VALUES ('71', '输入类型', '21', '0', 'add,update', '', '2270', '0', '0', '0', '0', '0', '', '', '', '', '', '1', '', '', '', '', '', '', null, null, null, null, null, null, null, null, '0', null, '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', null, null, '1', '0');
 INSERT INTO `too_module` VALUES ('72', '管理员', '16', '1', 'add,update,delete,view', '', '2280', '1', '0', '0', '0', '0', '', '', '', '', '', '1', '', '', '', '', '', '', null, null, null, null, null, null, null, null, '0', null, '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', null, null, '1', '0');
 INSERT INTO `too_module` VALUES ('73', '数据表字段分组', '68', '1', 'add,update,delete', '', '2290', '1', '0', '0', '0', '0', '', '', '', '', '', '1', '', '', '', '', '', '', null, null, null, null, null, null, null, null, '0', null, '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', null, null, '1', '0');
-INSERT INTO `too_module` VALUES ('74', '模块表单模块', '69', '0', 'add,update,delete', null, '2300', '0', '0', '0', '0', '0', '', '', '', '', '', '1', '', '', '', '', '', '', '', '', null, null, '', '', '', '', '0', '', '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', null, null, '1', '0');
+INSERT INTO `too_module` VALUES ('74', '模块表单模块', '69', '0', 'add,update,delete', null, '2300', '0', '0', '0', '0', '0', '', '', 'if(!empty($model->ntable_id) && empty($model->ntable_module_id)){\r\n	$tableModuleId = TDModule::createModuleByTableId($model->ntable_id);\r\n    $model->ntable_module_id = $tableModuleId;\r\n}', '', '', '1', '', '', '', '', '', '', '', '', null, null, '', '', '', '', '0', '', '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', '', null, '1', '0');
 INSERT INTO `too_module` VALUES ('238', '系统登录日志', '186', '1', null, null, '2330', '1', '0', '0', null, '0', '$VAL=\"id desc\";', '', '', '', '', '1', '', '', '', '', '', '', '', '', null, null, '', null, null, null, '0', null, '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', null, null, '1', '0');
 INSERT INTO `too_module` VALUES ('638', 'too_menu_items', '676', '1', 'update,delete', null, '5050', '0', '0', '0', null, '0', '', '', '', '', '', '1', 'TDEvent_Menu::afterSave($model);', '', '', '', '', '', '', '', 'if(isset($_GET[\"optype\"]) && $_GET[\"optype\"] == \"changeMenuItemsUseStatus\"){\r\n    $tomenuid = intval($_GET[\"tomenuid\"]);\r\n  	$csstatus = intval($_GET[\"csstatus\"]);\r\n  	if(empty($tomenuid)){\r\n  		echo \"tomenuid 为空,参数有误\";exit;\r\n    }\r\n	if(TDModelDAO::queryScalar(\"xg_wechat_pcmenu_items\",\"wechat_id=\".Xjkut::getCurwc().\" and menu_items_id=\".$tomenuid,\"count(*)\") > 0) {\r\n		TDModelDAO::updateRowByCondition(\"xg_wechat_pcmenu_items\", \"wechat_id=\".Xjkut::getCurwc().\" and menu_items_id=\".$tomenuid,array(\"is_use\"=>$csstatus));\r\n	} else {\r\n		$new = TDModelDAO::getModel(\"xg_wechat_pcmenu_items\");\r\n		$new->wechat_id =Xjkut::getCurwc();\r\n		$new->menu_items_id = $tomenuid;\r\n		$new->is_use = $csstatus;\r\n		$new->save();\r\n	}\r\n	echo \"success\";exit;\r\n}', 'echo \'\r\n<script>\r\nfunction changeMenuItemsUseStatus(id,csstatus){\r\n  var tip = csstatus == 1 ? \"激活该项\" : \"禁用该项\";\r\n  if(window.confirm(\"当前公众号是否确认\"+tip+\"？\")) {\r\n    	$.ajax({  \r\n			type:\"GET\",\r\n			dataType:\"text\",\r\n			url:\"\'.Yii::app()->request->url.\'?optype=changeMenuItemsUseStatus&tomenuid=\"+id+\"&csstatus=\"+csstatus,  \r\n			data:\"\",\r\n        	success:function(data){  \r\n              if(data==\"success\"){\r\n                  alert(\"操作成功\");\r\n                  to_gridview_refresh();\r\n              } else {\r\n                  alert(\"操作失败,\"+data);\r\n              }\r\n      		}  \r\n		});\r\n	}\r\n}\r\n</script>\r\n\';', '', '', '', '', '0', '', '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', '', null, '1', '0');
 INSERT INTO `too_module` VALUES ('868', 'too_role原职位对应', '11', '1', 'update', null, '6660', '1', '0', '0', null, '0', '', '', '', '', '', '1', '', '', '', '', '', '', '', '', null, null, '', '$rows = TDModelDAO::queryAll(\"xg_position\",\"wechat_id=\".Xjkut::getCurwc());\r\nforeach($rows as $row) {\r\n	$roleId = TDModelDAO::queryScalar(\"too_role\",\"expand_id=\".$row[\"id\"],\"min(id)\");\r\n	if(empty($roleId)) {\r\n		TDModelDAO::addRow(\"too_role\",array(\"name\"=>$row[\"name\"],\"remark\"=>$row[\"description\"],\"expand_id\"=>$row[\"id\"]));\r\n	} else {\r\n		TDModelDAO::saveRowByData(\"too_role\",$roleId,array(\"name\"=>$row[\"name\"]));\r\n	}\r\n}\r\n$VAL=\"join xg_position as xgp on xgp.id = t.expand_id and xgp.wechat_id=\".Xjkut::getCurwc();', '', '', '0', '', '0', null, null, null, null, null, '0', '0', '0', '0', '0', '0', '0', null, null, '1', '0');
@@ -198,7 +198,7 @@ CREATE TABLE `too_module_formedit` (
   KEY `table_column_id` (`table_column_id`),
   KEY `belong_to_column_id` (`belong_to_column_id`),
   CONSTRAINT `too_module_formedit_ibfk_1` FOREIGN KEY (`module_id`) REFERENCES `too_module` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6216 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=6285 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of too_module_formedit
@@ -243,7 +243,6 @@ INSERT INTO `too_module_formedit` VALUES ('306', '31', '702', '0', '', '230', '1
 INSERT INTO `too_module_formedit` VALUES ('307', '31', '703', '0', '', '240', '1', '1', '1', '0');
 INSERT INTO `too_module_formedit` VALUES ('308', '31', '704', '0', '', '250', '1', '1', '1', '0');
 INSERT INTO `too_module_formedit` VALUES ('309', '31', '705', '0', '', '270', '1', '1', '1', '0');
-INSERT INTO `too_module_formedit` VALUES ('310', '31', '706', '0', '', '310', '1', '1', '1', '0');
 INSERT INTO `too_module_formedit` VALUES ('311', '31', '707', '0', '', '300', '1', '1', '1', '0');
 INSERT INTO `too_module_formedit` VALUES ('313', '31', '709', '0', '', '320', '1', '1', '1', '0');
 INSERT INTO `too_module_formedit` VALUES ('314', '31', '710', '0', '', '330', '1', '1', '1', '0');
@@ -268,7 +267,6 @@ INSERT INTO `too_module_formedit` VALUES ('338', '31', '740', '0', '', '110', '1
 INSERT INTO `too_module_formedit` VALUES ('342', '11', '745', '0', '', '260', '1', '1', '1', '0');
 INSERT INTO `too_module_formedit` VALUES ('345', '31', '78', '0', null, '10', '1', '1', '1', '1');
 INSERT INTO `too_module_formedit` VALUES ('346', '11', '62', '0', null, '10', '0', '0', '1', '0');
-INSERT INTO `too_module_formedit` VALUES ('350', '74', '751', '0', '', '10', '1', '1', '1', '0');
 INSERT INTO `too_module_formedit` VALUES ('354', '74', '755', '0', '', '30', '1', '1', '1', '0');
 INSERT INTO `too_module_formedit` VALUES ('355', '74', '756', '0', '', '70', '1', '1', '1', '0');
 INSERT INTO `too_module_formedit` VALUES ('356', '74', '757', '0', '', '90', '1', '1', '1', '0');
@@ -389,6 +387,72 @@ INSERT INTO `too_module_formedit` VALUES ('6095', '1088', '7894', null, null, '2
 INSERT INTO `too_module_formedit` VALUES ('6096', '1088', '7895', null, null, '30', '1', '1', '1', '0');
 INSERT INTO `too_module_formedit` VALUES ('6134', '31', '7924', null, null, '365', '1', '1', '1', '0');
 INSERT INTO `too_module_formedit` VALUES ('6136', '72', '7926', null, null, '80', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6215', '74', '8106', null, null, '10', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6217', '36', '80', '0', '', '20', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6218', '36', '81', '0', '', '60', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6219', '36', '274', '0', '', '80', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6220', '36', '275', '0', '', '140', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6221', '36', '276', '0', '', '150', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6222', '36', '125', '0', '', '50', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6223', '36', '126', '0', '', '120', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6224', '36', '79', '0', '', '30', '1', '0', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6225', '36', '122', '0', '', '40', '1', '0', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6226', '36', '272', '0', '', '170', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6227', '36', '273', '0', '', '550', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6228', '36', '698', '0', '', '190', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6229', '36', '699', '0', '', '200', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6230', '36', '700', '0', '', '210', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6231', '36', '701', '0', '', '220', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6232', '36', '702', '0', '', '230', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6233', '36', '703', '0', '', '240', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6234', '36', '704', '0', '', '250', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6235', '36', '705', '0', '', '270', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6236', '36', '707', '0', '', '300', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6237', '36', '709', '0', '', '320', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6238', '36', '710', '0', '', '330', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6239', '36', '711', '0', '', '340', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6240', '36', '714', '0', '', '360', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6241', '36', '715', '0', '', '370', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6242', '36', '716', '0', '', '380', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6243', '36', '717', '0', '', '400', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6244', '36', '718', '0', '', '410', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6245', '36', '719', '0', '', '420', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6246', '36', '720', '0', '', '430', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6247', '36', '721', '0', '', '440', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6248', '36', '722', '0', '', '350', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6249', '36', '724', '0', '', '70', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6250', '36', '732', '0', '', '390', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6251', '36', '738', '0', '', '450', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6252', '36', '740', '0', '', '110', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6253', '36', '78', '0', '', '10', '1', '1', '1', '1');
+INSERT INTO `too_module_formedit` VALUES ('6254', '36', '271', '0', '', '130', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6255', '36', '187', '0', '', '90', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6256', '36', '792', '0', '', '100', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6257', '36', '1065', '0', '', '460', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6258', '36', '1717', '0', '', '530', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6259', '36', '1718', '0', '', '540', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6260', '36', '1755', '0', '', '470', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6261', '36', '1790', '0', '', '260', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6262', '36', '3520', null, '', '280', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6263', '36', '3521', null, '', '290', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6264', '36', '4105', null, '', '480', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6265', '36', '4106', null, '', '490', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6266', '36', '4107', null, '', '500', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6267', '36', '4116', null, '', '510', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6268', '36', '4117', null, '', '520', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6269', '36', '4637', null, '', '160', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6270', '36', '5703', null, '', '570', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6271', '36', '5704', null, '', '580', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6272', '36', '5705', null, '', '590', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6273', '36', '5708', null, '', '600', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6274', '36', '6649', null, '', '172', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6275', '36', '6667', null, '', '610', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6276', '36', '6668', null, '', '620', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6277', '36', '6701', null, '', '135', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6278', '36', '7435', null, '', '122', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6279', '36', '7436', null, '', '123', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6280', '36', '7437', null, '', '124', '1', '1', '1', '0');
+INSERT INTO `too_module_formedit` VALUES ('6281', '36', '7924', null, '', '365', '1', '1', '1', '0');
 
 -- ----------------------------
 -- Table structure for `too_module_formmodule`
@@ -417,24 +481,25 @@ CREATE TABLE `too_module_formmodule` (
   `is_foredit` tinyint(1) DEFAULT '0' COMMENT '用于修改;[0=否],[1=是]',
   `is_foradd` tinyint(1) DEFAULT '0' COMMENT '用于添加;[0=否],[1=是]',
   `gridview_expbtn_id` int(11) DEFAULT '0' COMMENT '所属扩展操作按钮',
+  `ntable_id` int(11) DEFAULT '0' COMMENT '(1-n)n关系表',
   PRIMARY KEY (`id`),
   KEY `form_module_id` (`form_module_id`),
   KEY `ntable_module_id` (`ntable_module_id`),
   CONSTRAINT `too_module_formmodule_ibfk_1` FOREIGN KEY (`form_module_id`) REFERENCES `too_module` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=344 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=345 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of too_module_formmodule
 -- ----------------------------
-INSERT INTO `too_module_formmodule` VALUES ('2', '11', '74', '模块表单模块', '', '', '749', '', '', '10', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0');
-INSERT INTO `too_module_formmodule` VALUES ('4', '26', '73', '字段分组', '', '', '736', '', '', '10', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0');
-INSERT INTO `too_module_formmodule` VALUES ('5', '26', '31', '数据表字段', '', '', '78', '', '', '20', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0');
-INSERT INTO `too_module_formmodule` VALUES ('9', '26', '11', '功能模块', '', '', '62', '', '', '30', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0');
-INSERT INTO `too_module_formmodule` VALUES ('158', '10', '638', 'tab内容项', null, null, '5892', null, '$VAL=false;\r\n$pid1=intval(TDModelDAO::queryScalar(TDTable::$too_menu,\"id=\".intval($model->pid),\"pid\"));\r\nif($pid1>0 && intval(TDModelDAO::queryScalar(TDTable::$too_menu,\"id=\".$pid1,\"pid\")) == 0){\r\n	$VAL=true;\r\n}', '10', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0');
-INSERT INTO `too_module_formmodule` VALUES ('246', '72', '0', '测试数据', null, null, null, null, null, '10', null, '0', '0', '0', '0', '1', 'echo \"<h1>测试页面顶部内容</h1>\";', 'echo \"<h1>测试页面底部内容</h1>\";', null, '0', '0', '0');
-INSERT INTO `too_module_formmodule` VALUES ('284', '11', '969', '扩展操作按钮', null, null, '7081', null, null, '20', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0');
-INSERT INTO `too_module_formmodule` VALUES ('341', '11', '38', 'grdview显示字段', null, null, '152', null, null, '30', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0');
-INSERT INTO `too_module_formmodule` VALUES ('342', '11', '40', '编辑表单字段', null, null, '174', null, null, '40', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0');
+INSERT INTO `too_module_formmodule` VALUES ('2', '11', '74', '模块表单模块', '', '', '749', '', '', '10', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0', '74');
+INSERT INTO `too_module_formmodule` VALUES ('4', '26', '73', '字段分组', '', '', '736', '', '', '10', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0', '73');
+INSERT INTO `too_module_formmodule` VALUES ('5', '26', '31', '数据表字段', '', '', '78', '', '', '20', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0', '31');
+INSERT INTO `too_module_formmodule` VALUES ('9', '26', '11', '功能模块', '', '', '62', '', '', '30', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0', '11');
+INSERT INTO `too_module_formmodule` VALUES ('158', '10', '638', 'tab内容项', null, null, '5892', null, '$VAL=false;\r\n$pid1=intval(TDModelDAO::queryScalar(TDTable::$too_menu,\"id=\".intval($model->pid),\"pid\"));\r\nif($pid1>0 && intval(TDModelDAO::queryScalar(TDTable::$too_menu,\"id=\".$pid1,\"pid\")) == 0){\r\n	$VAL=true;\r\n}', '10', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0', '638');
+INSERT INTO `too_module_formmodule` VALUES ('246', '72', '0', '测试数据', null, null, null, null, null, '10', null, '0', '0', '0', '0', '1', 'echo \"<h1>测试页面顶部内容</h1>\";', 'echo \"<h1>测试页面底部内容</h1>\";', null, '0', '0', '0', null);
+INSERT INTO `too_module_formmodule` VALUES ('284', '11', '969', '扩展操作按钮', null, null, '7081', null, null, '20', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0', '969');
+INSERT INTO `too_module_formmodule` VALUES ('341', '11', '38', 'grdview显示字段', null, null, '152', null, null, '30', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0', '38');
+INSERT INTO `too_module_formmodule` VALUES ('342', '11', '40', '编辑表单字段', null, null, '174', null, null, '40', null, '1', '1', '0', '0', '0', null, null, null, '1', '0', '0', '40');
 
 -- ----------------------------
 -- Table structure for `too_module_gridview`
@@ -459,7 +524,7 @@ CREATE TABLE `too_module_gridview` (
   KEY `belong_to_column_id` (`belong_to_column_id`),
   KEY `sys_module_gridview_ibfk_3` (`module_id`),
   CONSTRAINT `too_module_gridview_ibfk_1` FOREIGN KEY (`module_id`) REFERENCES `too_module` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8673 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=8693 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of too_module_gridview
@@ -633,7 +698,7 @@ CREATE TABLE `too_session` (
 -- ----------------------------
 -- Records of too_session
 -- ----------------------------
-INSERT INTO `too_session` VALUES ('gnvl5h4n0vlnb7akmsfepfndv8', '1533094508', 0x5969692E4343617074636861416374696F6E2E32303563393431332E7444536974652E636170746368617C733A343A22636E6A77223B5969692E4343617074636861416374696F6E2E32303563393431332E7444536974652E63617074636861636F756E747C693A313B34326434333663636636643236383436663630383662386565383032353731355F5F69647C733A313A2239223B34326434333663636636643236383436663630383662386565383032353731355F5F6E616D657C733A353A2261646D696E223B34326434333663636636643236383436663630383662386565383032353731355F5F7374617465737C613A303A7B7D7573657269647C733A313A2239223B757365726E616D657C733A353A2261646D696E223B6E69636B6E616D657C733A393A22E5BC80E58F91E88085223B726F6C65737C4E3B69736D616E616765727C733A333A22796573223B697341646D696E4D61726B7C623A313B6D656E755F7065726D697373696F6E5F7374727C733A313A2220223B636C69656E7457696474687C693A313834303B757365724D61726B5374727C733A31313A223931353333303930333232223B);
+INSERT INTO `too_session` VALUES ('4e1cajmkjqbbmtega15e2556ch', '1533940244', 0x5969692E4343617074636861416374696F6E2E32303563393431332E7444536974652E636170746368617C733A343A2266637475223B5969692E4343617074636861416374696F6E2E32303563393431332E7444536974652E63617074636861636F756E747C693A313B34326434333663636636643236383436663630383662386565383032353731355F5F69647C733A313A2239223B34326434333663636636643236383436663630383662386565383032353731355F5F6E616D657C733A383A22746F6F61646D696E223B34326434333663636636643236383436663630383662386565383032353731355F5F7374617465737C613A303A7B7D7573657269647C733A313A2239223B757365726E616D657C733A383A22746F6F61646D696E223B6E69636B6E616D657C733A393A22E5BC80E58F91E88085223B726F6C65737C4E3B69736D616E616765727C733A333A22796573223B6D656E755F7065726D697373696F6E5F7374727C733A303A22223B636C69656E7457696474687C693A313834303B757365724D61726B5374727C733A31313A223931353333393337323434223B697341646D696E4D61726B7C623A313B);
 
 -- ----------------------------
 -- Table structure for `too_table_collection`
@@ -750,7 +815,7 @@ CREATE TABLE `too_table_column` (
   KEY `table_collection_id` (`table_collection_id`),
   KEY `table_column_input_id` (`table_column_input_id`),
   KEY `foreign_table_column_id` (`foreign_table_column_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8106 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=8107 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of too_table_column
@@ -767,7 +832,7 @@ INSERT INTO `too_table_column` VALUES ('57', '11', 'name', '角色', '0', 'varch
 INSERT INTO `too_table_column` VALUES ('58', '11', 'remark', '备注', '0', 'varchar(255)', '255', '255', null, '1', null, '1', '0', '', '', '0', '0', '0', '', '', '', '', '', '0', '', '', '0', '0', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '0', '0', '0', '0', '0', '', '', '', '', null, null, '0', null, '0', '0', null, '30', null, null, null, null, null, null, '0', null, '0', '1', null, null, '0');
 INSERT INTO `too_table_column` VALUES ('60', '12', 'id', 'id', '1', 'int(11)', '11', '11', null, '0', null, '1', '0', '', '', '0', '0', '0', '', '', '', '', '', '0', '', '', '0', '0', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '0', '5', '1', '0', '0', '', '', '', '', null, null, '0', null, '0', '0', null, '10', null, null, null, null, null, null, '0', null, '0', '1', null, null, '0');
 INSERT INTO `too_table_column` VALUES ('61', '12', 'name', '模块名称', '0', 'varchar(255)', '255', '255', null, '0', null, '1', '0', '', '', '0', '0', '0', '', '', '', '', '', '0', '', '', '0', '0', '', '', '', '', '', '', '', '', '0', '0', '', '', '', '0', '5', '0', '0', '0', '', '', '', '', null, null, '0', null, '0', '0', null, '20', null, null, null, null, null, null, '0', null, '0', '1', null, null, '0');
-INSERT INTO `too_table_column` VALUES ('62', '12', 'table_collection_id', '数据表', '0', 'int(11)', '11', '11', null, '0', null, '18', '0', '', null, '0', '0', '0', '0', '0', null, null, null, '0', null, null, null, '13', '75', null, '76', 'postReloadCurrentForm()', null, null, null, null, '0', '0', null, '', '$VAL = \"\";\r\nif(!TDSessionData::currentUserIsTooAdmin()) {\r\n$VAL = \"`t`.`id` not in(\".TDTable::$sys_table_ids.\")\";\r\n}', '0', '5', '0', '0', '0', '', '', null, null, null, null, '0', null, '0', '0', null, '30', null, null, null, null, null, null, '0', null, '0', '1', null, null, '0');
+INSERT INTO `too_table_column` VALUES ('62', '12', 'table_collection_id', '数据表', '0', 'int(11)', '11', '11', null, '0', null, '12', '0', '', null, '0', '0', '0', '0', '0', null, null, null, '0', null, null, '26', '13', '75', null, '76', 'postReloadCurrentForm()', null, null, null, null, '0', '0', null, '', '$VAL = \"\";\r\nif(!TDSessionData::currentUserIsTooAdmin()) {\r\n$VAL = \"`t`.`id` not in(\".TDTable::$sys_table_ids.\")\";\r\n}', '0', '5', '0', '0', '0', '', '', null, null, null, null, '0', '', '0', '0', '', '30', '', null, null, null, '', '', '0', null, '0', '1', '', '', '0');
 INSERT INTO `too_table_column` VALUES ('63', '12', 'search_view', '搜索模式', '0', 'tinyint(1)', '1', '1', '1', '1', null, '17', '0', '', '', '0', '0', '0', '0', '0', '', '', '', '0', '', '', '0', '0', '', '', '', '', '$VAL = \"[0=不显示],[1=高级搜索],[2=高级组合搜索]\";', '', '', '', '0', '0', '', '', '', '0', '5', '0', '0', '0', '', '', '', '', null, null, '0', null, '0', '0', null, '40', null, null, null, null, null, null, '0', null, '0', '1', null, null, '0');
 INSERT INTO `too_table_column` VALUES ('68', '12', 'allow_actions', '允许操作', '0', 'varchar(255)', '255', '255', null, '1', null, '3', '0', '', '', '0', '0', '0', '0', '0', '', '', '', '0', '', '', '0', '0', '', '', '', '', '$VAL = \"[add=添加],[update=修改],[delete=删除],[deletemore=批量删除],[view=查看]\";', '', '', '', '0', '0', '', '', '', '0', '5', '0', '0', '0', '', '', '', '', null, null, '0', null, '0', '0', null, '50', null, null, null, null, null, null, '0', null, '0', '1', null, null, '0');
 INSERT INTO `too_table_column` VALUES ('69', '12', 'remark', '备注', '0', 'text', null, null, null, '1', null, '19', '0', '', null, '0', '0', '0', null, null, null, null, null, '0', null, null, '0', '0', null, null, null, null, null, null, null, null, null, null, null, '', null, '0', '5', '0', '0', '0', '', '', null, null, null, null, '0', '', '0', '0', null, '60', '', null, null, null, '', '', '0', null, '0', '1', null, null, '0');
@@ -842,7 +907,7 @@ INSERT INTO `too_table_column` VALUES ('703', '20', 'file_max_size', '文件最�
 INSERT INTO `too_table_column` VALUES ('704', '20', 'file_too_large', '文件过大提示', '0', 'text', null, null, null, '1', null, '1', '0', '', '', '0', '0', '0', '', '', '', '', '', '0', '', '', '0', '0', '', '', '', '', '', '', '', '', '0', '0', '', '$VAL = $data->table_column_input_id == 11;', '', '0', '2', '0', '0', '0', '', '', '', '', null, null, '0', null, '0', '0', null, '250', null, null, null, null, null, null, '0', null, '0', '1', null, null, '0');
 INSERT INTO `too_table_column` VALUES ('705', '20', 'file_path', '文件路径', '0', 'varchar(255)', '255', '255', null, '1', null, '25', '0', '', '上传文件时保存的基本路径,紧紧只作为上传文件的时候使用,它会结合扩展路径一起使用,\r\n如:  $VAL=\"file/img/\";  或  $VAL=\"/../wx/xjk/web/upload/productImg/\";', '0', '0', '0', null, null, null, null, null, '0', null, null, '0', '0', null, null, null, null, null, null, null, null, '0', '0', null, '$VAL = $data->table_column_input_id == 11;', null, '0', '2', '0', '0', '0', '', '', null, null, null, null, '0', '', '0', '0', null, '260', '', null, null, null, '', '', '0', null, '0', '1', null, null, '0');
 INSERT INTO `too_table_column` VALUES ('706', '20', 'module_id', '模块ID', '0', 'int(11)', '11', '11', null, '1', null, '18', '0', '', '', '0', '0', '0', '', '', '', '', '', '0', '', '', '0', '12', '61', '', '', '', '', '', '', '', '0', '0', '', '$VAL = in_array($data->table_column_input_id,array(4,12,18));', '$tbid = !empty($data->map_table_collection_id) ? $data->map_table_collection_id : 0;\r\n$VAL =\"`t`.`table_collection_id`=\".$tbid;', '0', '2', '0', '0', '0', '', '', '', '', null, null, '0', null, '0', '0', null, '270', null, null, null, null, null, null, '0', null, '0', '1', null, null, '0');
-INSERT INTO `too_table_column` VALUES ('707', '20', 'map_table_collection_id', 'Map数据表', '0', 'int(11)', '11', '11', null, '1', null, '18', '0', '', null, '0', '0', '0', null, null, null, null, null, '0', null, null, null, '13', '74', null, '76', 'postReloadCurrentForm()', null, null, null, null, '0', '0', null, '$VAL = in_array($data->table_column_input_id,array(4,12,18));', '', '0', '2', '0', '0', '0', '', '', null, null, null, null, '0', '', '0', '0', '', '280', '', null, null, null, '', null, '0', null, '0', '1', null, null, '0');
+INSERT INTO `too_table_column` VALUES ('707', '20', 'map_table_collection_id', 'Map数据表', '0', 'int(11)', '11', '11', null, '1', null, '12', '0', '', null, '0', '0', '0', null, null, null, null, null, '0', null, null, '26', '13', '74', null, '76', 'postReloadCurrentForm()', null, null, null, null, '0', '0', null, '$VAL = in_array($data->table_column_input_id,array(4,12,18));', '', '0', '2', '0', '0', '0', '', '', null, null, null, null, '0', '', '0', '0', '', '280', '', null, null, null, '', '', '0', null, '0', '1', '', '', '0');
 INSERT INTO `too_table_column` VALUES ('709', '20', 'value_laddercolumn', 'MapValue列ID', '0', 'varchar(255)', '255', '255', null, '1', null, '22', '0', '', '', '0', '0', '0', '', '', '', '', '', '0', '', '', '0', '0', '', '', '', '', '', '', '', '', '0', '0', '', '$VAL = in_array($data->table_column_input_id,array(4,12,18));', '', '0', '2', '0', '0', '0', '', '', '', '', null, null, '0', null, '0', '0', null, '290', null, null, null, null, null, null, '0', null, '0', '1', null, null, '0');
 INSERT INTO `too_table_column` VALUES ('710', '20', 'append_laddercolumn', 'MapValue附加列ID', '0', 'varchar(255)', '255', '255', null, '1', null, '22', '0', '', '', '0', '0', '0', '', '', '', '', '', '0', '', '', '0', '0', '', '', '', '', '', '', '', '', '0', '0', '', '$VAL = in_array($data->table_column_input_id,array(4,12,18));', '', '0', '2', '0', '0', '0', '', '', '', '', null, null, '0', null, '0', '0', null, '300', null, null, null, null, null, null, '0', null, '0', '1', null, null, '0');
 INSERT INTO `too_table_column` VALUES ('711', '20', 'optgroup_laddercolumn', '列表分组列ID', '0', 'varchar(255)', '255', '255', null, '1', null, '22', '0', '', '', '0', '0', '0', '', '', '', '', '', '0', '', '', '0', '0', '', '', '', '', '', '', '', '', '0', '0', '', '$VAL = in_array($data->table_column_input_id,array(4,12,18));', '', '0', '2', '0', '0', '0', '', '', '', '', null, null, '0', null, '0', '0', null, '310', null, null, null, null, null, null, '0', null, '0', '1', null, null, '0');
@@ -1028,6 +1093,7 @@ INSERT INTO `too_table_column` VALUES ('7895', '931', 'data', 'data', '0', 'blob
 INSERT INTO `too_table_column` VALUES ('7924', '20', 'tree_node_max', '树节点数限制(0不限)', '0', 'tinyint(1)', '1', '1', '0', '1', null, '1', '0', null, null, '0', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, '$VAL = $data->table_column_input_id == 15;', null, null, '2', '0', '0', '0', null, null, null, null, null, null, '0', null, '0', '0', null, '710', null, null, null, null, null, null, '0', null, '0', '1', null, null, '0');
 INSERT INTO `too_table_column` VALUES ('7925', '13', 'lastupdate_set', '最后更改时间', '0', 'datetime', null, null, null, '1', null, '9', '0', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, '', null, null, null, null, null, null, null, null, null, null, '0', '0', '0', null, null, null, null, null, null, '0', null, '0', '0', null, '70', null, null, null, null, null, null, '0', null, '0', '1', null, null, '0');
 INSERT INTO `too_table_column` VALUES ('7926', '16', 'is_manager', '是否为管理员', '0', 'tinyint(11)', '11', '11', '0', '1', null, '16', '0', '', null, '0', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, '$VAL=\"[0=否],[1=是]\";', null, null, null, null, null, null, '', null, null, null, '0', '0', '0', '', '', '', null, null, null, '0', '', '0', '0', null, '100', '', null, null, null, '', '', '0', null, '0', '1', '', '', '0');
+INSERT INTO `too_table_column` VALUES ('8106', '69', 'ntable_id', '(1-n)n关系表', '0', 'int(11)', '11', '11', '0', '1', null, '12', '0', '', null, '0', null, null, null, null, null, null, null, null, null, null, '26', '13', '74', null, null, null, null, null, null, null, null, null, null, '', '', null, null, '0', '0', '0', '', '', null, null, null, null, '0', '', '0', '0', '', '230', '', null, null, null, '', '', '0', null, '0', '1', '', '', '0');
 
 -- ----------------------------
 -- Table structure for `too_table_column_class`
@@ -1128,9 +1194,9 @@ CREATE TABLE `too_user` (
   `nt_pwd` varchar(50) DEFAULT NULL COMMENT 'NT密码',
   `is_manager` tinyint(11) DEFAULT '0' COMMENT '是否为管理员',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of too_user
 -- ----------------------------
-INSERT INTO `too_user` VALUES ('124', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '开发者', null, null, null, null, null, '1');
+INSERT INTO `too_user` VALUES ('10', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '开发者', null, null, null, null, null, '1');

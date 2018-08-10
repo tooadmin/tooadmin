@@ -18,14 +18,12 @@ if(isset($_POST['tabTableName']) && isset($_POST['menuItemName'])) {
 	$errorMsg = "";
 	if(!empty($tableId)) {
 		$tran = TDModelDAO::getCommDB()->beginTransaction();
-		$moduleModel = TDModelDAO::getModel(TDTable::$too_module);
-		$moduleModel->name = $tabTableName;
-		$moduleModel->table_collection_id = $tableId;
-		if($moduleModel->save()){
+		$tableModuleId = TDModule::createModuleByTableId($tableId);	
+		if($tableModuleId) {
 			$menuItemModel = TDModelDAO::getModel(TDTable::$too_menu_items);
 			$menuItemModel->menu_id = $blgMnInd;
 			$menuItemModel->name = $menuItemName;
-			$menuItemModel->module_id = $moduleModel->id;
+			$menuItemModel->module_id = $tableModuleId;
 			$menuItemModel->order = TDModelDAO::queryScalar(TDTable::$too_menu_items,"menu_id=".$blgMnInd, "max(`order`)") + 10;
 			if($menuItemModel->save()) {
 				$tran->commit();	
@@ -35,7 +33,7 @@ if(isset($_POST['tabTableName']) && isset($_POST['menuItemName'])) {
 				$errorMsg .= TDCommon::getArrayValuesToString($menuItemModel->errors);
 			}
 		} else {
-			$errorMsg .= TDCommon::getArrayValuesToString($moduleModel->errors);
+			$errorMsg .= "创建模块出错";
 		}
 	} else {
 		$errorMsg = "数据表不存在";

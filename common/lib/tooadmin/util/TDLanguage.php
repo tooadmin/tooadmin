@@ -71,7 +71,7 @@ class TDLanguage {
 	public static $tip_msg_check_delete_new_column = '是否确认删除自定义列?';
 	public static $tip_msg_check_drop_column = '是否确认删除字段?';
 	public static $tip_msg_check_delete_current = '是否确认删除?';
-	public static $tip_msg_check_delete_current_menu = '删除菜单,将删除该菜单所有子菜单,是否确认删除?';
+	public static $tip_msg_check_delete_current_menu = '删除菜单,将删除该菜单所有子菜单及模块,是否确认删除?';
 	public static $button_delete = '删除';
 	public static $tip_msg_save_success = '保存成功!';
 
