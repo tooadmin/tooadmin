@@ -11,6 +11,8 @@ class TDGridView extends TDWidget{
 	public function afterInit() {   }
 
 	public function getColumns($appendGridId="") {
+		$columns = TDField::getGridViewColumns($this,$this->gridviewModuleId,$this->gridview_only_view); 
+		/* 暂时隐藏缓存，列的统计数值时有问题
 		$cacheValue = TDSessionData::getCache('createGridView_'.$this->moduleId.'_'.$this->gridviewModuleId."_".$this->gridview_only_view);
 		if($cacheValue && !in_array($this->moduleId,array(TDStaticDefined::$mysqlCommonModuleId,38))) {
 			$columns = $cacheValue;
@@ -18,6 +20,7 @@ class TDGridView extends TDWidget{
 			$columns = TDField::getGridViewColumns($this,$this->gridviewModuleId,$this->gridview_only_view); 
 			TDSessionData::setCache('createGridView_'.$this->moduleId.'_'.$this->gridviewModuleId."_".$this->gridview_only_view,$columns);
 		}
+		*/
 		$innerChildGridviewColumns = $this->getChildInnerGridviewColumns($this->moduleId);
 		foreach($innerChildGridviewColumns as $childIndex => $innerChild) { $columns["innerChild".$childIndex] = $innerChild; }
 		$moduleExpOpButotn = $this->getModuleExpandeOpButton();

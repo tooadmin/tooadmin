@@ -119,6 +119,8 @@ class Fie_order extends TDField {
 				$groupByStrs .= empty($groupByStrs) ? "" : ",";
 				$groupByStrs .= '`'.$orderGroup.'`';
 			}
+
+			$tbpkCol = TDTableColumn::getPrimaryKeyColumnName($tableName);
 			if(!empty($groupByStrs)) {
 				$groupRows = TDModelDAO::queryAll($tableName,"1 group by ".$groupByStrs."","".$groupByStrs."");
 				foreach($groupRows as $gRow) {
@@ -131,12 +133,12 @@ class Fie_order extends TDField {
 						'condition' => $condition,
 						'order' => $order,
 					);
-					$rows = TDModelDAO::queryAll($tableName,$condition." order by ".$order,"`id`"); $index = 1;
-					foreach($rows as $row) { TDModelDAO::getDB($tableName)->createCommand("update `".$tableName."` set `".$orderName."`=".($index * 10)." where `id`=".$row["id"])->execute(); $index++; }
+					$rows = TDModelDAO::queryAll($tableName,$condition." order by ".$order,"`".$tbpkCol."`"); $index = 1;
+					foreach($rows as $row) { TDModelDAO::getDB($tableName)->createCommand("update `".$tableName."` set `".$orderName."`=".($index * 10)." where `".$tbpkCol."`=".$row[$tbpkCol])->execute(); $index++; }
 				}		
 			} else {
-				$rows = TDModelDAO::queryAll($tableName," 1 order by ".$order." limit 1000","`id`"); $index = 1;
-				foreach($rows as $row) { TDModelDAO::getDB($tableName)->createCommand("update `".$tableName."` set `".$orderName."`=".($index*10)." where `id`=".$row["id"])->execute(); $index++; }	
+				$rows = TDModelDAO::queryAll($tableName," 1 order by ".$order." limit 1000","`".$tbpkCol."`"); $index = 1;
+				foreach($rows as $row) { TDModelDAO::getDB($tableName)->createCommand("update `".$tableName."` set `".$orderName."`=".($index*10)." where `".$tbpkCol."`=".$row[$tbpkCol])->execute(); $index++; }	
 			}
 		}
 	}

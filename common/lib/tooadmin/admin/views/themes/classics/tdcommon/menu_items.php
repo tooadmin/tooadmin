@@ -14,7 +14,12 @@ if(isset($_POST['tabTableName']) && isset($_POST['menuItemName'])) {
 	$blgMnInd = intval($_POST['blgMnInd']);
 	$tabTableName = trim($_POST['tabTableName']);
 	$menuItemName = trim($_POST['menuItemName']);
-	$tableId = TDTableColumn::getTableCollectionID($tabTableName);
+	$copyModuleId = intval(trim($_POST['copyModuleId']));
+	if(!empty($copyModuleId)) {
+		$tableId = TDModule::getModuleTableId($copyModuleId);
+	} else {
+		$tableId = TDTableColumn::getTableCollectionID($tabTableName);
+	}
 	$errorMsg = "";
 	if(!empty($tableId)) {
 		$tran = TDModelDAO::getCommDB()->beginTransaction();
@@ -26,6 +31,7 @@ if(isset($_POST['tabTableName']) && isset($_POST['menuItemName'])) {
 			$menuItemModel->module_id = $tableModuleId;
 			$menuItemModel->order = TDModelDAO::queryScalar(TDTable::$too_menu_items,"menu_id=".$blgMnInd, "max(`order`)") + 10;
 			if($menuItemModel->save()) {
+				TDModule::copyModuleSet($copyModuleId,$tableModuleId);
 				$tran->commit();	
 				echo 'success';exit;
 			} else {
@@ -86,16 +92,17 @@ if(isset($_POST['tabTableName']) && isset($_POST['menuItemName'])) {
 	}
 	function saveToNewTabModule() {
 		var tabTableName = $("#queryTableStr").val();
+		var copyModuleId = $("#copyItemModuleId").val();
 		var menuItemName = $("#menuItemName").val();
 		if(menuItemName == ''){
 			alert("tab菜单项名称不能为空");	return;
 		}
-		if(tabTableName == ''){
-			alert("tab项管理的数据库表能为空"); return;
+		if(copyModuleId == '' && tabTableName == '') {
+			alert("tab复制模块ID与tab管理的数据库表不能同时为空"); return;
 		}
 		$.ajax({ type:'post',
 			url:'',
-			data:'blgMnInd=<?php echo $curMnInd; ?>&tabTableName='+tabTableName+'&menuItemName='+menuItemName,
+			data:'blgMnInd=<?php echo $curMnInd; ?>&tabTableName='+tabTableName+'&menuItemName='+menuItemName+'&copyModuleId='+copyModuleId,
 			dataType:'html' ,success:function(data){ if(data == "success") { alert("<?php echo TDLanguage::$tip_msg_operate_ok; ?>"); 
 		window.location.reload(); } else { alert(data); } }});
 	}
@@ -103,6 +110,10 @@ if(isset($_POST['tabTableName']) && isset($_POST['menuItemName'])) {
 	
 	<div style="margin-top: 28px;">
 		<span>tab菜单项名称 </span> <input type="text" id="menuItemName" style="width:150px;">
+	</div>
+
+	<div style="margin-top: 5px;">
+		<span>tab复制模块ID </span> <input type="text" id="copyItemModuleId" style="width:150px;">
 	</div>
 
 	<div style="margin-top:5px;">

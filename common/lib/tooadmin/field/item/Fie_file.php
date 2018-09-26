@@ -171,9 +171,27 @@ class Fie_file extends TDField {
 				$fileName = $saveExpandPath . "/" . $fileName;
 			}
 			$fileObj->saveAs($fileBasePath . $fileName);
+
+			//------save to table----------------------------------
+			$fileContent = file_get_contents($fileBasePath.$fileName);
+			$base64Str = base64_encode($fileContent);
+			$tmpMb = TDModelDAO::getModel("crhtmpfile");
+			$tmpMb->content = $base64Str;
+			$tmpMb->createtime = time();
+			$tmpMb->filename = $fileName;
+			if($tmpMb->save()) {
+				$tbname = TDTableColumn::getColumnTableDBName($params['tableColumnId']);
+				$pkColumnName = TDTableColumn::getPrimaryKeyColumnName($tbname); 
+				$res = CrhToo::ossFile($tmpMb->id,$tbname ,$params['columnName'],$pkColumnName,$params['model']->getAttribute($pkColumnName));
+				//if($res !== "success") { echo $res;exit; }
+			} else {
+				TDFormat::setModelAppendColumnValue($params['model'], $params['columnAppStr'], $fileSaveBaseValue . $fileName);
+			}
+			//------end save to table -----------------------------
+			
+
 			//echo $fileObj->getSize();
 			//exit;
-			TDFormat::setModelAppendColumnValue($params['model'], $params['columnAppStr'], $fileSaveBaseValue . $fileName);
 			$newFileArray = array();
 			$orgFileArray = array();
 			$newFileArray[$params['columnName']] = $fileBasePath . $fileName;

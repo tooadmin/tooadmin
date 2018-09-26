@@ -62,7 +62,8 @@ class TDCommonController extends TDController
 			$minInd = intval(TDModelDAO::queryScalar(TDTable::$too_menu,"pid=" .$topmnInd." and `is_show`=1 order by `order`","id"));
 			$_GET["mnInd"] = $minInd; 
 		}
-		$items = TDModelDAO::queryAll(TDTable::$too_menu_items,"menu_id=".$minInd." and `is_show`=1 and layout_menu_items_pid=0 order by `order`");	
+		$items = TDModelDAO::queryAll(TDTable::$too_menu_items,"menu_id=".$minInd." and `is_show`=1 and layout_menu_items_pid=0 ".
+		Yii::app()->session['menu_items_permission_str']." order by `order`");	
 		$this->layout = TDLayout::getLayout();
 		$this->render('menu_items',array('items'=>$items));
 	}

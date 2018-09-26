@@ -348,7 +348,7 @@ abstract class TDField {
 			$inputType = TDTableColumn::getInputTypeByInputId($columnFormData['columnInputId']);	
 			if(method_exists($inputType,'editForm')) {
 				$fie = new $inputType();
-				if($row["readonly"] == 1) {
+				if($row["readonly"] == 1 || TDTableColumn::checkIsCustomColumn($row["table_column_id"])) {
 					$fieldHtml = $fie->viewData($params);	
 					$fieldHtml = $fieldHtml["value"];	
 				} else {
@@ -619,13 +619,15 @@ abstract class TDField {
 		$id = self::createFieldIdOrName($tableColumnId, $belongOrderColumnIds);
 		$name = self::createFieldIdOrName($tableColumnId, $belongOrderColumnIds,true);
 		$dataValueStr = TDTableColumn::getColumnAppendStr($tableColumnId,$belongOrderColumnIds);
-		$value = $model instanceof CActiveRecord ? TDFormat::getModelAppendColumnValue($model,$dataValueStr) : $model;
-		if(empty($value) && TDTableColumn::checkIsCustomColumn($tableColumnId)) {
+		$value = '';
+		if(TDTableColumn::checkIsCustomColumn($tableColumnId)) {
 			if(isset($_POST[TDStaticDefined::$formModelName]) && isset($_POST[TDStaticDefined::$formModelName][$name])) {
 				$value = $_POST[TDStaticDefined::$formModelName][$name]; 
 			} else if(!empty($columnData["formula"])) { 
 				$value = Fie_formula::computeFormula($model,$columnData["name"]);
 			}
+		} else {
+			$value = $model instanceof CActiveRecord ? TDFormat::getModelAppendColumnValue($model,$dataValueStr) : $model;
 		}
 		$displayValidate = true; if(!empty($columnData["display_validate"])) { $displayValidate = Fie_formula::getValue($model,$columnData["display_validate"]); }
 		return array(

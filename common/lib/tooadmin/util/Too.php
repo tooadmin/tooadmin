@@ -53,4 +53,22 @@ class Too {
 	public static function refresh() {
 		return "$('#layoutCompos".TDRequestData::getGetData('mitemId')."').html('');loadMenuItemUrl('layoutCompos".TDRequestData::getGetData('mitemId')."','".Yii::app()->request->url."');";
 	}
+
+	 public function curlData($url,$data,$type="POST") {
+            $data = is_array($data) ? json_encode($data) : $data;
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST,$type);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+            curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $info = curl_exec($ch);
+            ///if (curl_errno($ch)) { echo 'Errno' . curl_error($ch); }
+            curl_close($ch);
+            return json_decode($info,true);
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 function createLiUrl($row,$topMinId) {
-	$menuItem = TDModelDAO::queryRowByCondtion(TDTable::$too_menu_items,"menu_id=".$row["id"]." and `is_show`=1 order by `order`");
+	$menuItem = TDModelDAO::queryRowByCondtion(TDTable::$too_menu_items,"menu_id=".$row["id"]." and `is_show`=1 ".Yii::app()->session['menu_items_permission_str']." order by `order`");
 	$url = '';
 	if ($menuItem['link_page_type'] == 1) { $url .= '/tDCommon/custome'; } 
 	else if($menuItem['link_page_type'] == 2) { $url .= '/tDCommon/query';	}

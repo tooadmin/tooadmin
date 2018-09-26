@@ -119,5 +119,47 @@ class TDModule {
 		}
 		return false;
 	}
+
+	public static function copyModuleSet($fromModuleId,$toModuleId) {
+		//清除原模块设置信息
+		TDModelDAO::deleteByCondition(TDTable::$too_module_formEdit,"module_id=".$toModuleId);
+		TDModelDAO::deleteByCondition(TDTable::$too_module_formmodule,"form_module_id=".$toModuleId);
+		TDModelDAO::deleteByCondition(TDTable::$too_module_gridview,"module_id=".$toModuleId);
+		TDModelDAO::deleteByCondition(TDTable::$too_module_gridview_expbtn,"too_module_id=".$toModuleId);
+		$baseModule = TDModelDAO::getModel(TDTable::$too_module,$fromModuleId);
+		$toModule = TDModelDAO::getModel(TDTable::$too_module,$toModuleId);
+		$attr = $baseModule->attributes;
+		$pkColumnName = $baseModule->getTableSchema()->primaryKey;
+		foreach($attr as $col => $value) {
+			if($col != $pkColumnName) {
+				$toModule->$col = $value;
+			}	
+		}
+		$toModule->save();
+		$rows = TDModelDAO::queryAll(TDTable::$too_module_formEdit,"module_id=".$fromModuleId);
+		foreach($rows as $row) {
+			$row['module_id'] = $toModuleId;
+			unset($row['id']);
+			TDModelDAO::addRow(TDTable::$too_module_formEdit,$row);
+		}
+		$rows = TDModelDAO::queryAll(TDTable::$too_module_formmodule,"form_module_id=".$fromModuleId);
+		foreach($rows as $row) {
+			$row['form_module_id'] = $toModuleId;
+			unset($row['id']);
+			TDModelDAO::addRow(TDTable::$too_module_formmodule,$row);
+		}
+		$rows = TDModelDAO::queryAll(TDTable::$too_module_gridview,"module_id=".$fromModuleId);
+		foreach($rows as $row) {
+			$row['module_id'] = $toModuleId;
+			unset($row['id']);
+			TDModelDAO::addRow(TDTable::$too_module_gridview,$row);
+		}	
+		$rows = TDModelDAO::queryAll(TDTable::$too_module_gridview_expbtn,"too_module_id=".$fromModuleId);
+		foreach($rows as $row) {
+			$row['too_module_id'] = $toModuleId;
+			unset($row['id']);
+			TDModelDAO::addRow(TDTable::$too_module_gridview_expbtn,$row);
+		}
+	}
 	
 }

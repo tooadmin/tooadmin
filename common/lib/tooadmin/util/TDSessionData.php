@@ -48,9 +48,11 @@ class TDSessionData {
 		$curExpMenuIds = array();
 		if(TDSessionData::currentUserIsTooAdmin()) {
 			Yii::app()->session['menu_permission_str'] = !empty($curExpMenuIds) ? " and id not in (".  implode(",",$curExpMenuIds).") " : "";	
+			Yii::app()->session['menu_items_permission_str'] = "";
 			return;
 		} else if(TDSessionData::currentUserIsAdmin()) {
 			Yii::app()->session['menu_permission_str'] = !empty($curExpMenuIds) ? " and id not in (".  implode(",",$curExpMenuIds).")"  : " ";	
+			Yii::app()->session['menu_items_permission_str'] = "";
 			return;
 		}
 		
@@ -65,6 +67,7 @@ class TDSessionData {
 		$dbp_delete_permission = array();
 		$useDBPromission = true;
 		$menuIds = array();
+		$menuItemsIds = array();
 		$rows = TDModelDAO::queryAll(TDTable::$too_role,'`id` in ('.$roles.')');
 		foreach($rows as $row) {
 			$action_permission = array_merge($action_permission,explode(',',$row["action_permission"]));
@@ -76,7 +79,14 @@ class TDSessionData {
 			} else if($useDBPromission) {
 				$useDBPromission = false;
 			}
-			$menuIds = array_merge($menuIds,explode(',',$row["menu_module_permission"]));
+			$menuIdsTmp = array_merge($menuIds,explode(',',$row["menu_module_permission"]));
+			foreach($menuIdsTmp as $id) {
+				if(strpos($id,'i') === false) {
+					$menuIds[] = $id;	
+				} else {
+					$menuItemsIds[] = substr($id,1);
+				}
+			}
 		}
 		Yii::app()->session['use_db_permission'] = $useDBPromission; 
 		Yii::app()->session['action_permission'] = array_unique($action_permission);
@@ -84,6 +94,7 @@ class TDSessionData {
 		Yii::app()->session['dbp_add_permission'] = array_unique($dbp_add_permission);
 		Yii::app()->session['dbp_update_permission'] = array_unique($dbp_update_permission);
 		Yii::app()->session['dbp_delete_permission'] = array_unique($dbp_delete_permission);
+		Yii::app()->session['menu_items_permission_str'] = empty($menuItemsIds) ? " false " : " AND id IN (".implode(",",$menuItemsIds).") ";// $menuItemsIds;
 		$menuIds = array_unique($menuIds);
 
 		//过滤处理特殊权限
@@ -112,6 +123,7 @@ class TDSessionData {
 				}
 			}	
 		}
+		/*
 		foreach($speMenus as $menu) {
 			for($i=0; $i<count($menuIds); $i++) {
 				if(isset($menuIds[$i]) && $menuIds[$i] == $menu["id"]) {
@@ -134,7 +146,15 @@ class TDSessionData {
 			$menuIds = substr($menuIds,0,strlen($menuIds)-1);
 		}
 		Yii::app()->session['menu_permission_str'] = ' and `id` in ('.$menuIds.') ';
+		*/
+
+		Yii::app()->session['menu_permission_str'] = ' and `id` in ('.  implode(",",$menuIds).') ';
+
+		//echo 'Yii::app()->session[menu_items_permission_str]='.Yii::app()->session['menu_items_permission_str'].'<br/>';
+		//echo 'Yii::app()->session[menu_permission_str]='.Yii::app()->session['menu_permission_str'].'<br/>';
+		//echo  date("Y-m-d H:i:s"); exit;
 	}
+
 	public static function getIsUseDBPermission() { return Yii::app()->session['use_db_permission']; }
 	public static function getActionPermission() { return Yii::app()->session['action_permission']; }
 	public static function getDBQueryPermission() { return Yii::app()->session['dbp_query_permission']; }

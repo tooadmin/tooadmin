@@ -56,6 +56,16 @@ class TDCommonIOController extends TDController {
 		}
 	}
 	//public function actionAskIP() { echo "IP=". TDCommon::getClientIp(); }
+
+	public function actionOutside() {
+		$outkey = $_GET["outkey"]; 
+		$res = [];
+		$baseUrl = 'http://test.cherishlovo.com/mobile.php/out/';
+		if($outkey == 'wxmenu') {
+			$res = file_get_contents($baseUrl.'wxmenu'); 
+		}
+		echo $res;
+	}
 }
 
 

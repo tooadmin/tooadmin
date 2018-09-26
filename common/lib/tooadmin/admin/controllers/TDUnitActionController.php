@@ -9,7 +9,6 @@ class TDUnitActionController extends TDController
 			'actionPopupConditionEdit' => TDLanguage::$UnitActionController_PopupConditionEdit, 
 		    	'actionCreateQrcode'=> TDLanguage::$UnitActionController_CreateQrcode,
 		    	'actionMysql' => TDLanguage::$UnitActionController_Mysql,
-		    	'actionFileContent' => TDLanguage::$UnitActionController_FileConten,
 		    	'actionCheckUpgrade' => TDLanguage::$UnitActionController_CheckUpgrade,
 		    	'actionExportTableHtml' => TDLanguage::$UnitActionController_ExportTableHtml,
 			'actionExportSysTable' => '导出系统表',
@@ -229,5 +228,8 @@ class TDUnitActionController extends TDController
 	public function actionUserManage() {
 		$this->layout = TDLayout::getLayout();
 		$this->render('min_items/user_manage');
+	}
+	public function actionTmp() {
+		$this->render("min_items/cus_check_money",array());
 	}
 }

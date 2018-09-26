@@ -20,7 +20,7 @@ class Fie_pid extends TDField {
 		}
 		$id = $array['id'];
 		$result = TDStaticDefined::getTmpController()->widget('system.web.widgets.CTreeView'
-				, array('data' => TDDataDAO::getPidTreeArray($columnFormData['name'], $params['model']->$id
+				, array('data' => TDDataDAO::getPidTreeArray($columnFormData['name'], intval($params['model']->$id)
 					, $columnFormData['value'], $params['model']->tableName, $columnFormData['columnName'], $array['id'], $array['name'], 0, $map_condition)), true);
 		return $result;
 	}

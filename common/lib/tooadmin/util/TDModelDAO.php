@@ -23,10 +23,12 @@ class TDModelDAO {
 		return self::getDB($tbName);
 	}
 	public static function getFieldById($tableName, $pkId, $field, $default = null) { 
-		return self::getDB($tableName)->createCommand("select `".$field."` from `".$tableName."` where id=".$pkId)->queryScalar(); $res = !empty($res) ? $res : $default;
+		return self::getDB($tableName)->createCommand("select `".$field."` from `".$tableName.
+		"` where ".TDTableColumn::getPrimaryKeyColumnName($tableName)."=".$pkId)->queryScalar(); $res = !empty($res) ? $res : $default;
 	}
 	public static function queryRowByPk($tableName,$pkId,$select="*"){ 
-		return self::getDB($tableName)->createCommand("select ".$select." from `".$tableName."` where id=".$pkId)->queryRow();
+		return self::getDB($tableName)->createCommand("select ".$select." from `".$tableName.
+		"` where ".TDTableColumn::getPrimaryKeyColumnName($tableName)."=".$pkId)->queryRow();
 		/*
 		$needCache = self::isNeedCache($tableName);
 		if($needCache) {
@@ -45,7 +47,8 @@ class TDModelDAO {
 		return self::getDB($tableName)->createCommand("select ".$select." from `".$tableName."` where ".$condition." limit 1")->queryRow();
 	}
 	public static function queryScalarByPk($tableName,$pkId,$select){ 
-		return self::getDB($tableName)->createCommand("select ".$select." from `".$tableName."` where id=".$pkId)->queryScalar();
+		return self::getDB($tableName)->createCommand("select ".$select." from `".$tableName.
+		"` where ".TDTableColumn::getPrimaryKeyColumnName($tableName)."=".$pkId)->queryScalar();
 	}
 	public static function queryScalar($tableName,$condition,$select) { 
 		return self::getDB($tableName)->createCommand("select ".$select." from `".$tableName."` where ".$condition)->queryScalar();
@@ -54,7 +57,8 @@ class TDModelDAO {
 		return self::getDB($tableName)->createCommand("select ".$select." from `".$tableName."` ".(!empty($condition) ? " where ".$condition : ""))->queryAll();
 	}
 	public static function deleteByPk($tableName,$pkId) {
-		return self::getDB($tableName)->createCommand("delete from `".$tableName."` where `id`=".$pkId."")->execute();
+		return self::getDB($tableName)->createCommand("delete from `".$tableName.
+		"` where `".TDTableColumn::getPrimaryKeyColumnName($tableName)."`=".$pkId."")->execute();
 	}
 	//TDModelDAO::deleteByCondition($tableName, $condition);
 	public static function deleteByCondition($tableName,$condition) {
@@ -63,7 +67,8 @@ class TDModelDAO {
 	//TDModelDAO::updateRowByPk($tableName, $pkId, $data);
 	public static function updateRowByPk($tableName,$pkId,$data) {
 		$setStr = ""; foreach($data as $key => $value) { $setStr .= empty($setStr) ? "" : ","; $setStr .= "`".$key."`='".$value."'"; } 
-		if(!empty($setStr)) { return self::getDB($tableName)->createCommand("update `".$tableName."` set ".$setStr." where `id`=".$pkId."")->execute(); } 
+		if(!empty($setStr)) { return self::getDB($tableName)->createCommand("update `".$tableName."` set ".$setStr
+		." where `".TDTableColumn::getPrimaryKeyColumnName($tableName)."`=".$pkId."")->execute(); } 
 		return false;
 	}
 	//TDModelDAO::updateRowByCondition($tableName, $condition, $data);

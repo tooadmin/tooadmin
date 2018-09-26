@@ -146,4 +146,8 @@ class TDTableColumn {
 		return $cacheValue;
 	}
 
+	public static function getPrimaryKeyColumnName($tableName) {
+		$columnName = TDModelDAO::queryScalar(TDTable::$too_table_column, "table_collection_id=".TDTableColumn::getTableCollectionID($tableName)." AND is_primary_key=1","name");
+		return empty($columnName) ?  'id' : $columnName;
+	}
 }
